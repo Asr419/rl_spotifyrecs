@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "rl-spotify"
+version = "0.1.0"
+description = "Reinforcement Learning for slate based spotify recommendations"
+authors = ["Asr419 <asrthebest17@gmail.com>"]
+readme = "README.md"
+packages = [{include = "rl_spotify"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
