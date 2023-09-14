@@ -8,6 +8,7 @@ packages = [{include = "rl_spotify"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+spotipy = "^2.23.0"
 
 
 [build-system]
