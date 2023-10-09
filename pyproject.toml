@@ -7,8 +7,9 @@ readme = "README.md"
 packages = [{include = "rl_spotify"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.10.7"
 spotipy = "^2.23.0"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
