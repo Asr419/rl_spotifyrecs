@@ -7,9 +7,11 @@ readme = "README.md"
 packages = [{include = "rl_spotify"}]
 
 [tool.poetry.dependencies]
-python = "^3.10.7"
+python =">=3.10.7,<3.13"
 spotipy = "^2.23.0"
 python-dotenv = "^1.0.0"
+flask = "^3.0.0"
+pandas = "^2.1.1"
 
 
 [build-system]

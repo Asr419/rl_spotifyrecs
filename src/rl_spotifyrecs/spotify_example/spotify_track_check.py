@@ -18,7 +18,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
 ))
 
 # Define the Spotify track URI you want to check
-track_uri = 'spotify:track:7ttlemwytO21npSmLKqTBg'
+track_uri = 'spotify:track:3n3Ppam7vgaVa1iaRUc9Lp'
 
 try:
     # Make the request to get the track information

@@ -14,26 +14,26 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=SPOTIPY_CLIENT_ID,
     client_secret=SPOTIPY_CLIENT_SECRET,
     redirect_uri=SPOTIPY_REDIRECT_URI,
-    scope='playlist-modify-public'
+    scope='user-library-read user-read-playback-state user-read-currently-playing user-modify-playback-state playlist-modify-public playlist-modify-private'
 ))
-
+print(SPOTIPY_CLIENT_ID)
 # Get the user's saved tracks
-saved_tracks = sp.current_user_saved_tracks(limit=50)  # Adjust the limit as needed
+saved_tracks = sp.current_user_saved_tracks(limit=50) 
+print(saved_tracks) # Adjust the limit as needed
 seed_tracks = [track['track']['uri'] for track in saved_tracks['items']]
 seed_tracks = seed_tracks[:5]
+print(seed_tracks)
+# seed_tracks = [
+#     'spotify:track:6rqhFgbbKwnb9MLmUQDhG6',  # Seed track 1
+#     'spotify:track:3n3Ppam7vgaVa1iaRUc9Lp',  # Seed track 2
+#     'spotify:track:1Ld7nZ9fN4BpkP4tymKkUj',  # Seed track 3
+#     'spotify:track:7hDc8b7IXETo14hHIHdnhd',  # Seed track 4
+#     'spotify:track:3a1lNhkSLSkpJE4MSHpDu9'   # Seed track 5
+# ]
 # print(seed_tracks) 
 # Get Spotify recommendations
 recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=10)
-# recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=10) 
-#print(recommendations)
-# try:
-#     # Make the request to Spotify recommendations
-#     recommendations = sp.recommendations(seed_tracks=['track_id_1', 'track_id_2'], limit=10)
-# except spotipy.SpotifyException as e:
-#     print(f"Spotify API error: {e}")
-#     print(f"HTTP status code: {e.http_status}")
-#     print(f"Error reason: {e.reason}")
-#     print(f"Error message: {e.msg}") # Adjust the limit as needed
+
 
 # Combine saved tracks and recommendations
 all_tracks = saved_tracks['items'] + recommendations['tracks']
@@ -52,3 +52,5 @@ track_uris = [track['track']['uri'] for track in all_tracks]
 sp.playlist_add_items(playlist['id'], track_uris)
 
 print(f'Playlist created: {playlist_name}')
+
+#AQCn5jbgg9UKgnm6YVcTVdzn3dq6q4L6kAsmaRR0kZf7RYyykqWvxtIVtwzzkI2rh6hYwID-SfCZWKQnq5R-uKDcs2Bu5TLHyuSlzWemot5r_1SuGiK5b3AcuQ0cKfXx1iFzBE8C73DXZu4ypwMzpKkkNXgjPrR9

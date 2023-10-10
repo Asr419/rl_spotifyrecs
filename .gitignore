@@ -2,3 +2,5 @@
 .cache
 commands.txt
 .env
+/node_modules
+/package-lock.json
