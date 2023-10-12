@@ -43,7 +43,7 @@ all_tracks = [item for item in all_tracks if 'track' in item]
 random.shuffle(all_tracks)
 
 # Create a new playlist
-playlist_name = 'Recommended Playlist Test'
+playlist_name = 'Recommended Playlist Test 2'
 playlist_description = 'A playlist created from saved tracks and recommendations'
 playlist = sp.user_playlist_create(sp.me()['id'], name=playlist_name, public=True, description=playlist_description)
 

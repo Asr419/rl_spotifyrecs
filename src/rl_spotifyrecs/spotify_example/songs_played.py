@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import requests
 import time
+
 import spotipy.util as util
 
 from pprint import pprint
@@ -40,7 +41,7 @@ def recently_played():
      # Replace with the actual user ID
 
     # Playlist ID of the recommended playlist
-    playlist_url = 'https://open.spotify.com/playlist/0lrEL0eKBDe9uyfQtCLbUO'
+    playlist_url = 'https://open.spotify.com/playlist/3gyVR3Kz6kuMBGu426mehF'
 
     # Extract the playlist ID from the URL or URI
     playlist_id = playlist_url.split('/')[-1]
@@ -107,7 +108,7 @@ def recently_played():
             'Played Song At',
             'Played Song Position',
         ])
-    print(user_id)
+    
     new_data = {
         'Timestamp': [timestamp],
         'User_id': [user_id],  # New column for user ID
@@ -131,107 +132,54 @@ def recently_played():
     return updated_df
 
 
-def get_current_track(access_token):
-    response = requests.get(
-    SPOTIFY_GET_CURRENT_TRACK_URL,
-    headers={
-        "Authorization": f"Bearer {access_token}"
-    }
-    )
-    print(response)
-    json_resp = response.json()
-
-    track_id = json_resp['item']['id']
-    track_name = json_resp['item']['name']
-    artists = [artist for artist in json_resp['item']['artists']]
-
-    link = json_resp['item']['external_urls']['spotify']
-
-    artist_names = ', '.join([artist['name'] for artist in artists])
-
-    current_track_info = {
-    	"id": track_id,
-    	"track_name": track_name,
-    	"artists": artist_names,
-    	"link": link
-    }
-
-    return current_track_info
-def main():
-    current_track_id = None
-    while True:
-        current_track_info = get_current_track(ACCESS_TOKEN)
-        if current_track_info['id'] != current_track_id:
-            pprint(
-                current_track_info,
-                indent=4,
-            )
-            current_track_id = current_track_info['id']
-
-        time.sleep(1)
-
-
-
-# def currently_playing():
-#     # Initialize the Spotify API client with user authentication
+def get_current_track():
+    scope="user-read-currently-playing"
+    user=sp.me()['id']
+    token = util.prompt_for_user_token(user, scope)
+    current_track = spotipy.Spotify(token).current_user_playing_track()
+   
     
-#     user_id = sp.me()['id'] 
 
-#     # Get the currently playing track
-#     current_track = sp.current_user_playing_track()
+    if current_track is not None:
+        track_id = current_track['item']['id']
+        track_name = current_track['item']['name']
+        artists = ', '.join([artist['name'] for artist in current_track['item']['artists']])
+        link = current_track['item']['external_urls']['spotify']
+        actions = current_track['actions']
 
-#     played_song_id=None
-#     played_song_time=None
-#     played_song_action=None
+        # Create a dictionary with track details
+        track_info = {
+            "User_ID": [user],
+            "Track ID": [track_id],
+            "Link": [link],
+            "Track Name": [track_name],
+            "Artist Name": [artists],
+            "Actions": [actions],
+            "Progress_ms": [current_track['progress_ms']],
+        }
+        print(track_info)
+        #Create or update a CSV file
+        if os.path.isfile('live_data.csv'):
+        # Load the existing CSV data into a DataFrame
+            existing_df = pd.read_csv('live_data.csv')
+        else:
+        # Create a new CSV file with the specified columns
+            existing_df = pd.DataFrame(columns=[
+                'User_ID','Track ID','Link','Track Name','Artist Name', 'Actions','Progress_ms'
+            ])
 
-#     if current_track is not None and 'item' in current_track:
-#         # Extract relevant information from the currently playing track
-#         timestamp = pd.Timestamp.now()
-#         user_id = sp.me()['id'] 
-#         played_song_id = current_track['item']['id']
-#         played_song_time = current_track['progress_ms']
-#         played_song_action = current_track['actions']
-
-#         # Create a dictionary to hold the data
-        
-#     timestamp = datetime.now()
-#     print(played_song_id)
-
-#     if os.path.isfile('live_data.csv'):
-#         # Load the existing CSV data into a DataFrame
-#         existing_df = pd.read_csv('interaction_data.csv')
-#     else:
-#         # Create a new CSV file with the specified columns
-#         existing_df = pd.DataFrame(columns=[
-#             'Timestamp',
-#             'User_id'
-#             'Played Song Id',
-#             'Played Song At',
-#             'Played Song Action',
-#         ])
-
-#     data = {
-#             'Timestamp': [timestamp],
-#             'User_id': [user_id],
-#             'Played Song Id': [played_song_id],
-#             'Played Song time': [played_song_time],
-#             'Played Song Action': [played_song_action]
-#         }
+        track_info = pd.DataFrame(track_info)
+        df = pd.concat([existing_df, track_info], ignore_index=True)
+        df.to_csv('live_data.csv', index=False)
+        print(df)
+    return None
 
 
-#     new_df = pd.DataFrame(data)
 
-#     # Append the new data to the existing DataFrame
-#     updated_df = pd.concat([existing_df, new_df], ignore_index=True)
-
-#     # Save the updated DataFrame back to the same CSV file
-#     updated_df.to_csv('live_data.csv', index=False)
-
-#     return existing_df
 
 if __name__=='__main__':
     recently_played()
-    main()
+    get_current_track()
 
 
 
