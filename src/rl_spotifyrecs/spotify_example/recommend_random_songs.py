@@ -49,8 +49,9 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
     redirect_uri=SPOTIPY_REDIRECT_URI,
     scope='user-library-read user-read-recently-played playlist-modify-public playlist-modify-private',  # Required scope for modifying user's library
 ))
-
-# Function to recommend and add random songs to the user's Spotify library
+print(sp.me()['id'])
+user_id = sp.me()['id'] 
+# Function to recommend and add random songs to the user's Spotify library 'user-library-read user-read-recently-played playlist-modify-public playlist-modify-private'
 # def recommend_and_add_songs():
 #     # Get the user's saved tracks (you can customize this based on your needs)
 #     saved_tracks = sp.current_user_saved_tracks()

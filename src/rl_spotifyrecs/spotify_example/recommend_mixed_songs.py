@@ -8,7 +8,7 @@ load_dotenv()
 
 SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
 SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
-SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
+SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI_CALLBACK")
 # Initialize Spotipy with your credentials
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=SPOTIPY_CLIENT_ID,
@@ -43,7 +43,7 @@ all_tracks = [item for item in all_tracks if 'track' in item]
 random.shuffle(all_tracks)
 
 # Create a new playlist
-playlist_name = 'Recommended Playlist'
+playlist_name = 'Recommended Playlist Test'
 playlist_description = 'A playlist created from saved tracks and recommendations'
 playlist = sp.user_playlist_create(sp.me()['id'], name=playlist_name, public=True, description=playlist_description)
 
