@@ -22,6 +22,7 @@ SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI_CALLBACK")
 
 
+
 # Initialize Spotipy with user authorization
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
                                                client_secret=SPOTIPY_CLIENT_SECRET,
@@ -41,7 +42,7 @@ def recently_played():
      # Replace with the actual user ID
 
     # Playlist ID of the recommended playlist
-    playlist_url = 'https://open.spotify.com/playlist/3gyVR3Kz6kuMBGu426mehF'
+    playlist_url = 'https://open.spotify.com/playlist/43u0EqO8gaIFqiWez6pJ6D'
 
     # Extract the playlist ID from the URL or URI
     playlist_id = playlist_url.split('/')[-1]

@@ -16,12 +16,12 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     redirect_uri=SPOTIPY_REDIRECT_URI,
     scope='user-library-read user-read-playback-state user-read-currently-playing user-modify-playback-state playlist-modify-public playlist-modify-private'
 ))
-print(SPOTIPY_CLIENT_ID)
+
 # Get the user's saved tracks
-saved_tracks = sp.current_user_saved_tracks(limit=50) 
+saved_tracks = sp.current_user_saved_tracks(limit=20) 
 print(saved_tracks) # Adjust the limit as needed
 seed_tracks = [track['track']['uri'] for track in saved_tracks['items']]
-seed_tracks = seed_tracks[:5]
+seed_tracks = seed_tracks[:2]
 print(seed_tracks)
 # seed_tracks = [
 #     'spotify:track:6rqhFgbbKwnb9MLmUQDhG6',  # Seed track 1
@@ -43,7 +43,7 @@ all_tracks = [item for item in all_tracks if 'track' in item]
 random.shuffle(all_tracks)
 
 # Create a new playlist
-playlist_name = 'Recommended Playlist Test 2'
+playlist_name = 'Recommended Playlist Test 3'
 playlist_description = 'A playlist created from saved tracks and recommendations'
 playlist = sp.user_playlist_create(sp.me()['id'], name=playlist_name, public=True, description=playlist_description)
 
