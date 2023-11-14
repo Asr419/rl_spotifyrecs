@@ -1,4 +1,5 @@
 .venv
+poetry-env
 .cache
 .cache-7blo8ovgelmvittn4ht2uqvjt
 commands.txt

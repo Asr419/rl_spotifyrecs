@@ -11,6 +11,7 @@ SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
 SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI_CALLBACK")# This should match the one you set in your Spotify Developer Application
 Users=os.getenv("USERS")
+print(SPOTIPY_CLIENT_ID)
 
 # If you used a comma-separated list:
 Users = Users.split(",")
