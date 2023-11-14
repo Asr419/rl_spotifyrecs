@@ -8,3 +8,4 @@ commands.txt
 /package-lock.json
 *.csv
 *.cache*
+*.pyc  
