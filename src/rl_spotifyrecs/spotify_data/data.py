@@ -182,10 +182,6 @@ class DataLoader:
         res_extracted_data_list = res_extracted_data.values.tolist()
         res_feature_tensor = torch.tensor(res_extracted_data_list)
 
-        context_feature_tensor = context_feature_tensor.repeat(
-            (action_feature_tensor.shape[0], 1)
-        )
-
         return context_feature_tensor, action_feature_tensor, res_feature_tensor
 
     def UserSessions():

@@ -45,7 +45,7 @@ class CWM(nn.Module):
     ) -> torch.Tensor:
         # concatenate state and candidate docs
 
-        input1 = torch.cat([state, candidate_docs_repr], dim=1)
+        input1 = torch.cat([state, candidate_docs_repr], dim=2)
         # [num_candidate_docs, 1]
         if use_training_net:
             probability_val = self.training_net(input1)
