@@ -11,17 +11,20 @@ from sklearn.metrics.pairwise import cosine_similarity
 import torch
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
-df = pd.read_csv("~/spotify_session_data/log_mini.csv")
-track_df = pd.read_csv("~/spotify_session_data/tf_mini.csv")
+session_dataset = pd.read_csv("~/spotify_session_data/log_mini.csv")
+track_dataset = pd.read_csv("~/spotify_session_data/tf_mini.csv")
+track_id_mapping = {
+    track_id: i for i, track_id in enumerate(track_dataset["track_id"].unique())
+}
+session_id_mapping = {
+    session_id: i for i, session_id in enumerate(session_dataset["session_id"].unique())
+}
 
 
 class DataLoader:
     def sample_history(
         user_histo,
         action_ratio=0.25,
-        max_samp_by_user=10,
-        max_state=10,
-        max_action=5,
         nb_states=[],
         nb_actions=[],
     ):
@@ -64,10 +67,31 @@ class DataLoader:
 
         return sample_state, sample_action
 
-    def SpotifyData():
-        df = pd.read_csv("~/spotify_session_data/log_mini.csv")
-        track_df = pd.read_csv("~/spotify_session_data/tf_mini.csv")
+    def MappedData(df, track_df):
+        # Replace track_id with integers in track_df
+        track_df["track_id"] = track_df["track_id"].map(track_id_mapping)
+        df["session_id"] = df["session_id"].map(session_id_mapping)
 
+        # Replace track_id_clean with integers in df
+        df["track_id_clean"] = df["track_id_clean"].map(track_id_mapping)
+        return df, track_df
+
+    def TrackData():
+        track_dataset = pd.read_csv("~/spotify_session_data/tf_mini.csv")
+        track_dataset["track_id"] = track_dataset["track_id"].map(track_id_mapping)
+        return track_dataset
+
+    def SessionData():
+        session_dataset = pd.read_csv("~/spotify_session_data/log_mini.csv")
+        session_dataset["session_id"] = session_dataset["session_id"].map(
+            session_id_mapping
+        )
+        return session_dataset
+
+    def SpotifyData():
+        session_dataset = pd.read_csv("~/spotify_session_data/log_mini.csv")
+        track_dataset = pd.read_csv("~/spotify_session_data/tf_mini.csv")
+        df, track_df = DataLoader.MappedData(session_dataset, track_dataset)
         merged_df = pd.merge(
             track_df, df, left_on="track_id", right_on="track_id_clean", how="inner"
         )
@@ -186,7 +210,11 @@ class DataLoader:
 
     def UserSessions():
         merged_df = pd.merge(
-            track_df, df, left_on="track_id", right_on="track_id_clean", how="inner"
+            session_dataset,
+            track_dataset,
+            left_on="track_id_clean",
+            right_on="track_id",
+            how="inner",
         )
         merged_df
         sample_df = merged_df[merged_df["session_length"] == 20].reset_index(drop=True)

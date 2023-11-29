@@ -4,13 +4,14 @@ from spotipy.oauth2 import SpotifyOAuth
 from spotipy.oauth2 import SpotifyClientCredentials
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 # Define your Spotify API credentials
 
 SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
 SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI_CALLBACK")
-username='31wwsbw3pmr57faosjdo6khuptzq'#Aayush
+username = "31f55uwdngi55iadbqlvq6ewm64q"  # Aayush
 # # username='sx3djnk4f14mgkeqr6swvj91l'
 # print(sys.argv)
 # if len(sys.argv) > 1:
@@ -27,24 +28,24 @@ sprp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope="user-read-recently-playe
 
 playlists = sp.user_playlists(username)
 
-for playlist in playlists['items']:
-    print(playlist['name'])
-for playlist in playlists['items']:
-    print("Playlist Name:", playlist['name'])
-    print("Total Tracks:", playlist['tracks']['total'])
+for playlist in playlists["items"]:
+    print(playlist["name"])
+for playlist in playlists["items"]:
+    print("Playlist Name:", playlist["name"])
+    print("Total Tracks:", playlist["tracks"]["total"])
     print("Tracks:")
-    
+
     # Get the tracks in the playlist
-    results = sp.playlist_tracks(playlist['id'])
-    
-    for track in results['items']:
-        track_name = track['track']['name']
-        artist_names = [artist['name'] for artist in track['track']['artists']]
-        artists = ', '.join(artist_names)
+    results = sp.playlist_tracks(playlist["id"])
+
+    for track in results["items"]:
+        track_name = track["track"]["name"]
+        artist_names = [artist["name"] for artist in track["track"]["artists"]]
+        artists = ", ".join(artist_names)
         print(f"{track_name} by {artists}")
-    
+
     print("\n")
-LIMIT=50
+LIMIT = 50
 # results = sp.current_user_saved_tracks(limit=50)
 # print(results)
 
