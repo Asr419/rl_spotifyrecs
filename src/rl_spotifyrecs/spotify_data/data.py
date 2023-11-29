@@ -21,7 +21,7 @@ session_id_mapping = {
 }
 
 
-class DataLoader:
+class Spotify:
     def sample_history(
         user_histo,
         action_ratio=0.25,
@@ -91,7 +91,7 @@ class DataLoader:
     def SpotifyData():
         session_dataset = pd.read_csv("~/spotify_session_data/log_mini.csv")
         track_dataset = pd.read_csv("~/spotify_session_data/tf_mini.csv")
-        df, track_df = DataLoader.MappedData(session_dataset, track_dataset)
+        df, track_df = Spotify.MappedData(session_dataset, track_dataset)
         merged_df = pd.merge(
             track_df, df, left_on="track_id", right_on="track_id_clean", how="inner"
         )
@@ -111,12 +111,9 @@ class DataLoader:
             historic_users.append(temp)
 
         for i in range(0, len(historic_users)):
-            user_features, action_features = DataLoader.sample_history(
+            user_features, action_features = Spotify.sample_history(
                 user_histo=historic_users[i],
                 action_ratio=0.25,
-                max_samp_by_user=10,
-                max_state=1,
-                max_action=15,
                 nb_states=[],
                 nb_actions=[],
             )
@@ -174,12 +171,9 @@ class DataLoader:
         )
 
     def Feature_Vector(df, music_columns, response_columns, j: int):
-        user_features, action_features = DataLoader.sample_history(
+        user_features, action_features = Spotify.sample_history(
             action_ratio=0.25,
             user_histo=df[j],
-            max_samp_by_user=10,
-            max_state=1,
-            max_action=15,
             nb_states=[],
             nb_actions=[],
         )

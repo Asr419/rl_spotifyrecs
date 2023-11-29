@@ -13,6 +13,7 @@ from torch.utils.data import Dataset, IterableDataset
 class Transition(NamedTuple):
     state: torch.Tensor
     action: torch.Tensor
+    candidate_actions: torch.Tensor
     next_state: torch.Tensor
     reward: torch.Tensor
 
@@ -66,7 +67,6 @@ class DQNnet(nn.Module):
 class DQNAgent(nn.Module):
     def __init__(
         self,
-        slate_gen,
         input_size: int,
         output_size: int,
         hidden_dims: list[int] = [40, 20, 10, 5],

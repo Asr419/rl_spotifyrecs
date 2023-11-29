@@ -11,9 +11,11 @@ import pandas as pd
 import torch
 from pathlib import Path
 
-from rl_spotifyrecs.spotify_data.data import DataLoader
+from rl_spotifyrecs.spotify_data.data import Spotify
 from rl_spotifyrecs.user_model.spotify_cwm import CWM
+from dotenv import load_dotenv
 
+load_dotenv()
 base_path = Path.home() / Path(os.environ.get("DATA_PATH"))
 RUN_BASE_PATH = Path(f"spotify_model")
 music_columns = [
@@ -36,7 +38,7 @@ class SpotifyGym(gym.Env):
         self,
         device: torch.device = torch.device("cpu"),
     ) -> None:
-        self.data_loder = DataLoader
+        self.data_loader = Spotify
         self.device = device
         self.user_model = CWM
 
@@ -44,27 +46,31 @@ class SpotifyGym(gym.Env):
         self.candidate_actions: torch.Tensor
         self.candidate_response: torch.Tensor
 
-    def step(self, action: torch.Tensor):
+    def step(self, user_state: torch.Tensor, action: torch.Tensor):
         # select from the slate on item following the user choice model
-        present_state = self.curr_user
+        present_state = user_state
         response = self.user_model.compute_prob(
-            self.curr_user, action, use_training_net=True
+            user_state, action, use_training_net=True
         )
-        updated_user = self.curr_user[NUM_ITEM_FEATURES:]
-        self.curr_user = torch.cat([updated_user, action])
+
         info = {}
+        self.step_iteration += 1
+        if self.step_iteration == 15:
+            done = True
+        else:
+            done = False
 
         return (
             present_state,
             action,
-            self.curr_user,
             response,
-            False,
+            done,
             info,
         )
 
     def reset(self) -> None:
         # 1) sample user
+        self.step_iteration = 1
         historic_users = self.data_loader.UserSessions()
         user = random.sample(historic_users, 1)
         (
