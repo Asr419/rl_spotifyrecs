@@ -1,5 +1,7 @@
 import torch.optim as optim
 import random
+from pathlib import Path
+import os
 from torch.utils.data import DataLoader
 from rl_spotifyrecs.spotify_data.data import Spotify
 from rl_spotifyrecs.spotify_agent.dqn_agent import (
@@ -10,6 +12,8 @@ from rl_spotifyrecs.spotify_agent.dqn_agent import (
 from rl_spotifyrecs.spotify_environment.environment import SpotifyGym
 from tqdm import tqdm
 import torch
+from rl_spotifyrecs.utils import save_run_rl
+from dotenv import load_dotenv
 
 
 def optimize_model(batch):
@@ -41,7 +45,8 @@ def optimize_model(batch):
     cand_qtgt = torch.Tensor(cand_qtgt_list)
 
     q_tgt = torch.stack(cand_qtgt_list).unsqueeze(1)
-    expected_q_values = q_tgt * GAMMA + reward_batch
+    expected_q_values = q_tgt * GAMMA + reward_batch.unsqueeze(1)
+
     loss = criterion(q_val, expected_q_values)
 
     # Optimize the model
@@ -51,14 +56,19 @@ def optimize_model(batch):
 
 
 NUM_ITEM_FEATURES = 8
-NUM_EPISODES = 500
-BATCH_SIZE = 30
+NUM_EPISODES = 1000
+BATCH_SIZE = 128
 REPLAY_MEMORY_CAPACITY = 100
 TAU = 0.001
 LR = 0.01
 DEVICE = "cpu"
 WARMUP_BATCHES = 1
 GAMMA = 1.0
+load_dotenv()
+base_path = Path.home() / Path(os.environ.get("DATA_PATH"))
+RUN_BASE_PATH = Path(f"spotify_model")
+CWM = torch.load(base_path / RUN_BASE_PATH / Path("model.pt"))
+
 transition_cls = Transition
 replay_memory_dataset = ReplayMemoryDataset(
     capacity=REPLAY_MEMORY_CAPACITY, transition_cls=transition_cls
@@ -95,7 +105,7 @@ for i_episode in tqdm(range(NUM_EPISODES)):
             action_index = torch.argmax(q_val)
 
             (user_state, action, reward, done, info) = env.step(
-                user_state, candidate_actions[action_index]
+                user_state, candidate_actions[action_index], CWM
             )
             updated_user = user_state[NUM_ITEM_FEATURES:]
             next_user_state = torch.cat([updated_user, action])
@@ -123,3 +133,6 @@ for i_episode in tqdm(range(NUM_EPISODES)):
             elem.to(DEVICE)
         batch_loss = optimize_model(batch)
         agent.soft_update_target_network()
+
+directory = f"spotify_model"
+# save_run_rl(model=agent, directory=directory)

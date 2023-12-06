@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity
 import torch
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 session_dataset = pd.read_csv("~/spotify_session_data/log_mini.csv")
 track_dataset = pd.read_csv("~/spotify_session_data/tf_mini.csv")
@@ -97,8 +98,7 @@ class Spotify:
         )
         merged_df
         sample_df = merged_df[merged_df["session_length"] == 20].reset_index(drop=True)
-        sample_df["session_id"] = LabelEncoder().fit_transform(sample_df["session_id"])
-        sample_df["track_id"] = LabelEncoder().fit_transform(sample_df["track_id"])
+
         columns_to_convert = ["skip_1", "skip_2", "skip_3", "not_skipped"]
 
         # Convert the selected columns to binary (0/1)
@@ -152,7 +152,7 @@ class Spotify:
                 )
                 sequence_feature_vectors[track_id] = sequence_features
 
-        response_columns = ["skip_2"]
+        response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
         response_feature_vectors = {}
 
         # Loop through the track_ids and collect the values for selected columns
@@ -202,7 +202,7 @@ class Spotify:
 
         return context_feature_tensor, action_feature_tensor, res_feature_tensor
 
-    def UserSessions():
+    def UserSessions(train: bool = True):
         merged_df = pd.merge(
             session_dataset,
             track_dataset,
@@ -212,8 +212,8 @@ class Spotify:
         )
         merged_df
         sample_df = merged_df[merged_df["session_length"] == 20].reset_index(drop=True)
-        sample_df["session_id"] = LabelEncoder().fit_transform(sample_df["session_id"])
-        sample_df["track_id"] = LabelEncoder().fit_transform(sample_df["track_id"])
+        # sample_df["session_id"] = LabelEncoder().fit_transform(sample_df["session_id"])
+        # sample_df["track_id"] = LabelEncoder().fit_transform(sample_df["track_id"])
         columns_to_convert = ["skip_1", "skip_2", "skip_3", "not_skipped"]
 
         # Convert the selected columns to binary (0/1)
@@ -224,4 +224,10 @@ class Spotify:
             temp = temp.sort_values("session_position").reset_index()
             temp.drop("index", axis=1, inplace=True)
             historic_users.append(temp)
-        return historic_users
+        train_dfs, test_dfs = train_test_split(
+            historic_users, test_size=0.01, random_state=42
+        )
+        if train:
+            return train_dfs
+        else:
+            return test_dfs

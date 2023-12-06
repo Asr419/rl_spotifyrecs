@@ -1,4 +1,3 @@
-import os
 import random as rand
 from math import sqrt
 from typing import Optional
@@ -9,15 +8,11 @@ import random
 import numpy.typing as npt
 import pandas as pd
 import torch
-from pathlib import Path
+
 
 from rl_spotifyrecs.spotify_data.data import Spotify
-from rl_spotifyrecs.user_model.spotify_cwm import CWM
-from dotenv import load_dotenv
 
-load_dotenv()
-base_path = Path.home() / Path(os.environ.get("DATA_PATH"))
-RUN_BASE_PATH = Path(f"spotify_model")
+
 music_columns = [
     "acousticness",
     "beat_strength",
@@ -28,9 +23,8 @@ music_columns = [
     "speechiness",
     "valence",
 ]
-response_columns = ["skip_2"]
+response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
 NUM_ITEM_FEATURES = 8
-CWM = torch.load(base_path / RUN_BASE_PATH / Path("model.pt"))
 
 
 class SpotifyGym(gym.Env):
@@ -40,18 +34,17 @@ class SpotifyGym(gym.Env):
     ) -> None:
         self.data_loader = Spotify
         self.device = device
-        self.user_model = CWM
 
         # initialized by reset
         self.candidate_actions: torch.Tensor
         self.candidate_response: torch.Tensor
 
-    def step(self, user_state: torch.Tensor, action: torch.Tensor):
+    def step(self, user_state: torch.Tensor, action: torch.Tensor, user_model):
         # select from the slate on item following the user choice model
         present_state = user_state
-        response = self.user_model.compute_prob(
-            user_state, action, use_training_net=True
-        )
+        response = user_model.compute_prob(user_state, action, use_training_net=True)
+        print(response)
+        response = response[3]
 
         info = {}
         self.step_iteration += 1
