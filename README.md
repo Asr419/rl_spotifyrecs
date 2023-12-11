@@ -1,0 +1,1 @@
+This repo implements the action head policy as described in Automatic Music Playlist Generation via Simulation-based Reinforcement Learning (https://dl.acm.org/doi/pdf/10.1145/3580305.3599777) on the million playlist dataset.
