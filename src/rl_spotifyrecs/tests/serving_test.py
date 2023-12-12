@@ -13,6 +13,7 @@ from statistics import mean, stdev
 load_dotenv()
 base_path = Path.home() / Path(os.environ.get("DATA_PATH"))
 RUN_BASE_PATH = Path(f"spotify_model")
+
 music_columns = [
     "acousticness",
     "beat_strength",
@@ -27,6 +28,7 @@ response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
 NUM_ITEM_FEATURES = 8
 DQN_agent = torch.load(base_path / RUN_BASE_PATH / Path("rl_model.pt"))
 CWM = torch.load(base_path / RUN_BASE_PATH / Path("model.pt"))
+
 if __name__ == "__main__":
     env = SpotifyGym()
 
