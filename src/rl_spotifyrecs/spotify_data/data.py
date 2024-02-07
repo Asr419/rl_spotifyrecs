@@ -99,7 +99,7 @@ class Spotify:
         merged_df
         sample_df = merged_df[merged_df["session_length"] == 20].reset_index(drop=True)
 
-        columns_to_convert = ["skip_1", "skip_2", "skip_3", "not_skipped"]
+        columns_to_convert = ["skip_3", "not_skipped"]
 
         # Convert the selected columns to binary (0/1)
         sample_df[columns_to_convert] = sample_df[columns_to_convert].astype(int)
@@ -152,7 +152,7 @@ class Spotify:
                 )
                 sequence_feature_vectors[track_id] = sequence_features
 
-        response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
+        response_columns = ["skip_3", "not_skipped"]
         response_feature_vectors = {}
 
         # Loop through the track_ids and collect the values for selected columns
@@ -214,7 +214,7 @@ class Spotify:
         sample_df = merged_df[merged_df["session_length"] == 20].reset_index(drop=True)
         # sample_df["session_id"] = LabelEncoder().fit_transform(sample_df["session_id"])
         # sample_df["track_id"] = LabelEncoder().fit_transform(sample_df["track_id"])
-        columns_to_convert = ["skip_1", "skip_2", "skip_3", "not_skipped"]
+        columns_to_convert = ["skip_3", "not_skipped"]
 
         # Convert the selected columns to binary (0/1)
         sample_df[columns_to_convert] = sample_df[columns_to_convert].astype(int)

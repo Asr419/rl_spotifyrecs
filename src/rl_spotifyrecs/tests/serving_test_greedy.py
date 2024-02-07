@@ -23,7 +23,7 @@ music_columns = [
     "speechiness",
     "valence",
 ]
-response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
+response_columns = ["skip_3", "not_skipped"]
 
 NUM_ITEM_FEATURES = 8
 DQN_agent = torch.load(base_path / RUN_BASE_PATH / Path("rl_model.pt"))

@@ -27,7 +27,7 @@ class CWM(nn.Module):
         self,
         input_size: int,
         output_size: int,
-        hidden_dims: list[int] = [40, 24, 16, 8],
+        hidden_dims: list[int] = [40, 24, 16, 8, 4],
         tau: float = 0.001,
     ) -> None:
         nn.Module.__init__(self)

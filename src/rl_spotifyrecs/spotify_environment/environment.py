@@ -23,7 +23,7 @@ music_columns = [
     "speechiness",
     "valence",
 ]
-response_columns = ["skip_1", "skip_2", "skip_3", "not_skipped"]
+response_columns = ["skip_3", "not_skipped"]
 NUM_ITEM_FEATURES = 8
 
 
@@ -44,7 +44,7 @@ class SpotifyGym(gym.Env):
         present_state = user_state
         response = user_model.compute_prob(user_state, action, use_training_net=True)
         print(response)
-        response = response[3]
+        response = response[1]
 
         info = {}
         self.step_iteration += 1
